@@ -1,0 +1,88 @@
+import React, { Component } from 'react';
+import { Grid, Typography, Container, withStyles, Box } from '@material-ui/core';
+import Item from './Item';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { getItems, setLoading } from '../actions/itemActions';
+import { CircleLoader } from 'react-spinners';
+
+
+const classes = {
+    brand: {
+        color: "#673AB7"
+    },
+    loadingCont: {
+        position: "absolute",
+        top: "40vh",
+        left: "50%",
+        display: "flex",
+        transform: "translate(-50%, 0)",   
+        flexDirection: "column"
+    },
+    loading: {
+        alignSelf: "center",
+        marginLeft: "auto",
+        marginRight: "auto" 
+    }
+}
+
+class ItemList extends Component {
+
+    componentDidMount() {
+        this.props.setLoading();
+        this.props.getItems();
+    }
+
+    
+
+    render() {
+
+        const { classes, children, className } = this.props;
+
+        if (this.props.item.loading) {
+            
+            return (
+                <Box className={classes.loadingCont}>
+                    <div style={{display: "flex", justifyContent:"space-around"}}>
+                        <CircleLoader loading={this.props.item.loading} className={classes.loading} color="#673AB7" />
+                    </div>
+                    <Typography style={{paddingTop: "5px"}}>
+                        Загрузка
+                    </Typography>
+                </Box>
+            )
+        }
+
+        if (this.props.item.items.length === 0) {
+            return (
+                <Container>
+                    <Typography variant="h4"><span className={classes.brand}>hentai4u</span> - тестовая сборка пилус датабаза</Typography>
+                </Container>
+            )
+        }
+        return (
+            <div>
+            <Typography style={{paddingLeft: "1rem"}} variant="h4" gutterBottom>
+                Заметки:
+            </Typography>
+            <Grid item container spacing={4} direction="row" alignItems="center"> 
+                {this.props.item.items.map(item => (
+                    <Item name={item.name} id={item._id} key={item._id} />
+                ))}
+            </Grid>
+            </div>
+        ) 
+    }
+}
+
+ItemList.propTypes = {
+    items: PropTypes.object,
+    getItems: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => ({
+    item: state.item
+});
+
+export default connect(mapStateToProps, { getItems, setLoading })(withStyles(classes)(ItemList));
