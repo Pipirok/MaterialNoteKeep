@@ -1,0 +1,1 @@
+{"version":3,"sources":["main.css"],"names":[],"mappings":"AAAA,iBACI,qBACJ,CAEA,UACI,QAAS,CACT,YACJ","file":"main.f529ac7e.chunk.css","sourcesContent":["*, *::before, *::after {\r\n    box-sizing: border-box\r\n}\r\n\r\nhtml, body {\r\n    margin: 0;\r\n    height: 100vh;\r\n}"]}
