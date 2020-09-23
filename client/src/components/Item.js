@@ -22,7 +22,7 @@ class Item extends Component {
 
     
         render() {
-            const { classes, children, className, ...other } = this.props;
+            const { classes } = this.props;
         return (
         <Grid item xs={12} md={6} className={classes.root}>
             <Card>

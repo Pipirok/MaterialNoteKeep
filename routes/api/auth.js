@@ -2,47 +2,67 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require('../../models/User');
+const jwt = require('jsonwebtoken');
+const auth = require('../../middlewares/auth');
 
-router.post('/register', async (req, res) => {
+
+router.post('/', async (req, res) => {
     try {
-        const login = req.body.login;
-        const email = req.body.email;
-        const password = req.body.password;
 
+        const {login, password} = req.body;
 
-        if (!login || !email || !password) {
-            throw Error("Enter all fields");
+        if(!login || !password) {
+            throw Error("Enter all fields!");
         }
 
-        if (await User.findOne({email})) {
-            throw Error("Email already registered");
+        const userToAuthenticate = await User.findOne({ login });
+        
+        if(!userToAuthenticate) {
+            throw Error("User does not exist");
         }
 
-        const salt = await bcrypt.genSalt(10);
 
-        if(!salt) {
-            throw Error("Something went wrong with bcrypt");
+        const match = await bcrypt.compare(password, userToAuthenticate.password);
+        if(!match) {
+            throw Error("Incorrect password");
         }
 
-        const hash = await bcrypt.hash(password, salt);
 
-        if(!hash) {
-            throw Error("Error during hashing the password");
-        }
+        jwt.sign(
+            { id: userToAuthenticate.id },
+            process.env.SECRET,
+            (err, token) => {
+                if(err) throw err;
+                res.status(200).json({
+                    token,
+                    user: {
+                        id: userToAuthenticate.id,
+                        login: userToAuthenticate.login,
+                        email: userToAuthenticate.email,
+                    }
+                })
+            } 
+        )
 
-        const newUser = new User({
-            login,
-            email,
-            password: hash
-        });
 
-        await newUser.save();
-
-        res.status(200).json({login, email, hash})
 
     } catch(e) {
-        res.status(400).json({ msg: e.message })
+        res.status(400).json({ msg: e.message });
     }
 });
+
+
+
+// Using async/await in this route
+// for some reason causes weird nodejs errors
+// so it is done via callbacks
+
+router.get('/user', auth, (req, res) => {  
+    User.findById(req.user.id)
+        .select('-password')
+        .then(user => res.json(user));
+});
+
+
 
 module.exports = router;

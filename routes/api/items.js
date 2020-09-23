@@ -1,22 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const Item = require('../../models/Item');
+const auth = require('../../middlewares/auth');
 
 
 // fetch items from database
 router.get('/', async (req, res) => {
     try {
         
-        const items = await Item.find().sort('-_id');
+        /* const items = await */ Item.find().sort({ date: -1 }).exec((err, items) => res.json(items));
 
-        res.status(200).json(items);
+       // res.status(200).json(items);
     } catch (e) {
         res.status(400).json({ msg: e.message });
     }
 });
 
 // add a new item
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const newItem = new Item({
         name: req.body.name
     });
@@ -38,7 +39,7 @@ router.post('/', async (req, res) => {
 // Add auth before working on front end //
 //////////////////////////////////////////
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try {
         //console.log(req.params.id)
         const item = await Item.findById(req.params.id);

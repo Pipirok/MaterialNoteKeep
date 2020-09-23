@@ -23,6 +23,10 @@ const classes = {
         alignSelf: "center",
         marginLeft: "auto",
         marginRight: "auto" 
+    },
+    cont: {
+        marginTop: "1rem",
+        paddingBottom: "3rem"
     }
 }
 
@@ -37,7 +41,7 @@ class ItemList extends Component {
 
     render() {
 
-        const { classes, children, className } = this.props;
+        const { classes } = this.props;
 
         if (this.props.item.loading) {
             
@@ -55,17 +59,17 @@ class ItemList extends Component {
 
         if (this.props.item.items.length === 0) {
             return (
-                <Container>
+                <Container style={{marginTop: "3rem"}}>
                     <Typography variant="h4"><span className={classes.brand}>hentai4u</span> - тестовая сборка пилус датабаза</Typography>
                 </Container>
             )
         }
         return (
-            <div>
+            <div className={classes.cont}>
             <Typography style={{paddingLeft: "1rem"}} variant="h4" gutterBottom>
                 Заметки:
             </Typography>
-            <Grid item container spacing={4} direction="row" alignItems="center"> 
+            <Grid item container spacing={4} direction="row" alignItems="center" style={{marginBottom: "2rem"}}> 
                 {this.props.item.items.map(item => (
                     <Item name={item.name} id={item._id} key={item._id} />
                 ))}
