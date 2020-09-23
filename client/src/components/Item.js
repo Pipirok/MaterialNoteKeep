@@ -32,17 +32,10 @@ class Item extends Component {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    {/* <ButtonGroup className={classes.btnGroup}>
-                        <Button variant="contained" color="primary" onClick={() => {this.props.deleteItem(this.props.id)}}>
-                            Delete
-                        </Button>
-                        <Button variant="contained" color="secondary">
-                            Check
-                     </Button>
-                    </ButtonGroup> */}
+                    {this.props.isAuthenticated &&
                     <IconButton onClick={() => this.props.deleteItem(this.props.id)} style={{color: "#f44336"}} className={classes.btnGroup}>
                         <Delete />
-                    </IconButton>
+                    </IconButton>}
                 </CardActions>
             </Card>
         </Grid>
@@ -55,7 +48,8 @@ Item.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-    item: state.item
+    item: state.item,
+    isAuthenticated: state.auth.isAuthenticated
 })
 
 export default connect(mapStateToProps, { deleteItem })(withStyles(styles)(Item));

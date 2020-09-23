@@ -60,12 +60,22 @@ class ItemList extends Component {
         if (this.props.item.items.length === 0) {
             return (
                 <Container style={{marginTop: "3rem"}}>
-                    <Typography variant="h4"><span className={classes.brand}>hentai4u</span> - тестовая сборка пилус датабаза</Typography>
+                    <Typography gutterBottom variant="h4"><span className={classes.brand}>hentai4u</span> - тестовая сборка пилус датабаза</Typography>
+                    {!this.props.isAuthenticated && (
+                    <Typography gutterBottom variant="h5">
+                        Войдите или зарегистрируйтесь чтобы добавлять и удалять заметки.
+                    </Typography>
+                )}   
                 </Container>
             )
         }
         return (
             <div className={classes.cont}>
+                {!this.props.isAuthenticated && (
+                    <Typography gutterBottom variant="h5">
+                        Войдите или зарегистрируйтесь чтобы добавлять и удалять заметки.
+                    </Typography>
+                )}
             <Typography style={{paddingLeft: "1rem"}} variant="h4" gutterBottom>
                 Заметки:
             </Typography>
@@ -86,7 +96,8 @@ ItemList.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-    item: state.item
+    item: state.item,
+    isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(mapStateToProps, { getItems, setLoading })(withStyles(classes)(ItemList));

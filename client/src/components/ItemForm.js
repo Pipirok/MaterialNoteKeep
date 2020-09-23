@@ -55,28 +55,32 @@ class ItemForm extends Component {
 
         const { classes } = this.props
 
-        return (
-            <div className={classes.fabContainer}>
-                <Fab color="primary" className={classes.modalFab} size="large" onClick={this.handleToggle}>
-                    <Add />
-                </Fab>
-                <Dialog open={this.state.modal} onClose={this.handleToggle}>
-                    <DialogTitle>
-                        Добавить предмет
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Введите название предмета
-                        </DialogContentText>
-                        <TextField onChange={this.onChange} autoComplete="off" autoFocus variant="outlined" style={{color: purple[300]}} margin="dense" value={this.state.name} name="name" id="name" type="text" fullWidth label="Название" />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleToggle} variant="text" style={{color: red[500]}} color="primary">Отмена</Button>
-                        <Button onClick={this.onSubmit} variant="contained" color="secondary">Добавить</Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
-        )
+        if (!this.props.isAuthenticated) {
+            return null;
+        } else {
+            return (
+                <div className={classes.fabContainer}>
+                    <Fab color="primary" className={classes.modalFab} size="large" onClick={this.handleToggle}>
+                        <Add />
+                    </Fab>
+                    <Dialog open={this.state.modal} onClose={this.handleToggle}>
+                        <DialogTitle>
+                            Добавить предмет
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Введите название предмета
+                            </DialogContentText>
+                            <TextField onChange={this.onChange} autoComplete="off" autoFocus variant="outlined" style={{color: purple[300]}} margin="dense" value={this.state.name} name="name" id="name" type="text" fullWidth label="Название" />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleToggle} variant="text" style={{color: red[500]}} color="primary">Отмена</Button>
+                            <Button onClick={this.onSubmit} variant="contained" color="secondary">Добавить</Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>
+            )
+        }
     }
 
     onChange = (e) => {
@@ -100,7 +104,8 @@ ItemForm.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-    item: state.item
+    item: state.item,
+    isAuthenticated: state.auth.isAuthenticated
 })
 
 export default connect(mapStateToProps, { addItem })(withStyles(styles)(ItemForm));
