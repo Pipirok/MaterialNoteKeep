@@ -1,52 +1,54 @@
-import React from 'react';
-import { Provider } from 'react-redux';
+import React from "react";
+import { Provider } from "react-redux";
 
-import './main.css';
-import { createMuiTheme, ThemeProvider, CssBaseline, Grid } from '@material-ui/core';
+import "./main.css";
+import {
+  createMuiTheme,
+  ThemeProvider,
+  responsiveFontSizes,
+} from "@material-ui/core";
 
+import store from "./store";
+import { loadUser } from "./actions/authActions";
 
-import store from './store';
-import { loadUser } from './actions/authActions';
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Grid from "@material-ui/core/Grid";
+import Navbar from "./components/Navbar";
+import ItemList from "./components/ItemList";
+import { deepPurple, green } from "@material-ui/core/colors";
+import ItemForm from "./components/ItemForm";
 
-import Navbar from './components/Navbar';
-import ItemList from './components/ItemList';
-import { deepPurple, green } from '@material-ui/core/colors';
-import ItemForm from './components/ItemForm';
-
-
-const theme = createMuiTheme({
-  palette: {
-    type: 'dark',
-    //danger: red,
-    primary: deepPurple,
-    secondary: green
-  }
-})
+const theme = responsiveFontSizes(
+  createMuiTheme({
+    palette: {
+      type: "dark",
+      primary: deepPurple,
+      secondary: green,
+    },
+  })
+);
 
 export default class App extends React.Component {
-
   componentDidMount() {
-    store.dispatch(loadUser())
+    store.dispatch(loadUser());
   }
 
   render() {
     return (
       <Provider store={store}>
-       <ThemeProvider theme={theme}>
-          <CssBaseline/>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <Grid container>
-            <Navbar/>
+            <Navbar />
             <Grid item xs={false} sm={2} />
             <Grid item xs={12} sm={8}>
-              <ItemList/>
+              <ItemList />
             </Grid>
-            <Grid item xs={false} sm={2}/>
+            <Grid item xs={false} sm={2} />
           </Grid>
-          <ItemForm/>
+          <ItemForm />
         </ThemeProvider>
-     </Provider>
-    )
+      </Provider>
+    );
   }
-
-
 }
